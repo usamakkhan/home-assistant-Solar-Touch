@@ -39,20 +39,11 @@ display name changes to Solar Touch.
 | Internet for readings | Not required | Required |
 | Hardware profile | SolarMax/Senergy PV9000/ONYX register profile | Supported portal response fields |
 
-```mermaid
-flowchart LR
-    I["☀️ Inverter"] -->|"observed cloud upload: about 5 min"| C["☁️ CloudInverter.net"]
-    H["🏠 Home Assistant"] -->|"cloud API check: 300 s default"| C
-    H -->|"direct Modbus read: 180 s default"| I
-    classDef device fill:#FFF3C4,stroke:#C68810,color:#242424
-    classDef ha fill:#D8F3E5,stroke:#1E8250,color:#242424
-    classDef cloud fill:#DCEBFF,stroke:#3271BD,color:#242424
-    class I device
-    class H ha
-    class C cloud
-```
+- ☀️ **Inverter → CloudInverter.net:** In my installation, the inverter uploads about every five minutes.
+- 🏠 **Home Assistant → CloudInverter.net:** The cloud source requests the latest uploaded reading every 300 seconds by default.
+- 🏠 **Home Assistant → inverter IP:** The local source reads Modbus registers every 180 seconds by default.
 
-The diagram shows the two available paths; select one when adding the integration. The roughly five-minute upload I observed is **device-to-cloud traffic**, while the 300-second and 180-second values are **Home Assistant read intervals**. Matching the cloud interval to the observed upload cadence avoids most repeated API requests, but the two clocks are not synchronized. A direct LAN capture can be delayed by a quiet window around the estimated cloud upload period, so its actual spacing may exceed 180 seconds.
+Select one path when adding the integration. The roughly five-minute upload I observed is **device-to-cloud traffic**, while the 300-second and 180-second values are **Home Assistant read intervals**. Matching the cloud interval to the observed upload cadence avoids most repeated API requests, but the two clocks are not synchronized. A direct LAN capture can be delayed by a quiet window around the estimated cloud upload period, so its actual spacing may exceed 180 seconds.
 
 ## 📊 What data appears in Home Assistant?
 
@@ -76,9 +67,9 @@ inverter's Wh remainder when the latter is valid. The same lifetime entity ID
 is retained. This improves the resolution of new readings; it does not rewrite
 previously recorded Home Assistant statistics.
 
-### ⚡ Add CloudInverter.net sensors to the Energy dashboard
+### ⚡ Add Solar Touch sensors to the Energy dashboard
 
-Open **Settings → Dashboards → Energy** and use the following cumulative **kWh** sensors for the matching fields. Use the actual entity IDs shown on your Solar Touch device page.
+Open **Settings → Dashboards → Energy** and use the following cumulative **kWh** sensors from either the cloud or direct LAN source for the matching fields. Use the actual entity IDs shown on your Solar Touch device page.
 
 | Energy dashboard field | Solar Touch sensor |
 | --- | --- |

@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.13 — Solar Touch — 2026-10-11
+
+- Gave the direct LAN lifetime Energy counters the same short names as the cloud counters. The Energy graph can distinguish solar production, grid import/export, and battery charge/discharge before the legend truncates; existing entity IDs and statistics remain unchanged.
+- Replaced a README diagram that HACS displayed as raw Mermaid code with readable source-path bullets. Updated the Energy installation guidance to cover both data sources.
+
 ## v1.5.12 — Solar Touch — 2026-10-11
 
 - Shortened the cloud inverter device label to **Solar Touch** and removed the repeated integration prefix from cloud sensor names. The hardware model remains in the device model field.
