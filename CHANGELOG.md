@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.12 — Solar Touch — 2026-10-11
+
+- Shortened the cloud inverter device label to **Solar Touch** and removed the repeated integration prefix from cloud sensor names. The hardware model remains in the device model field.
+- Renamed the five cumulative cloud Energy sources to **Solar production**, **Grid import**, **Grid export**, **Battery charge**, and **Battery discharge** so Home Assistant's Electricity graph legend can distinguish them before truncation.
+- Kept each sensor's unique ID, energy value, unit, and statistics class unchanged. Existing Energy selections and recorded history continue to use the same entities. A user-set device or entity name override may need to be shortened manually in Home Assistant.
+
 ## v1.5.11 — Solar Touch — 2026-10-10
 
 - Fixed a Home Assistant log warning found during live diagnosis: the cloud setup and configuration flow no longer close HTTP sessions owned by Home Assistant when an entry reloads or a setup flow ends.

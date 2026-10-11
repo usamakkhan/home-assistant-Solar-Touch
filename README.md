@@ -82,13 +82,13 @@ Open **Settings → Dashboards → Energy** and use the following cumulative **k
 
 | Energy dashboard field | Solar Touch sensor |
 | --- | --- |
-| Solar panels → solar production | **Total Energy** |
-| Electricity grid → energy imported from grid | **Grid Import Total** |
-| Electricity grid → energy exported to grid | **Grid Export Total** |
-| Home battery → energy going into the battery | **Battery Charge Total** |
-| Home battery → energy coming out of the battery | **Battery Discharge Total** |
+| Solar panels → solar production | **Solar production** (formerly **Total Energy**) |
+| Electricity grid → energy imported from grid | **Grid import** (formerly **Grid Import Total**) |
+| Electricity grid → energy exported to grid | **Grid export** (formerly **Grid Export Total**) |
+| Home battery → energy going into the battery | **Battery charge** (formerly **Battery Charge Total**) |
+| Home battery → energy coming out of the battery | **Battery discharge** (formerly **Battery Discharge Total**) |
 
-**Total Energy is the inverter's lifetime production counter.** Home Assistant uses changes in a cumulative sensor, not a sum of every displayed reading. If a counter starts at 0 and later reads 1, 4, and 5 kWh, the day's gain is **5 kWh**, not 10 kWh. If Home Assistant first observes it at 1 kWh, that first reading is its baseline and it records the later **4 kWh** gain. A lifetime counter works the same way: an example initial 10,000 kWh is a starting point, not 10,000 kWh of new production. Do not add both **Daily Energy** and **Total Energy** as solar production sources for the same inverter; that would count one production stream twice. Power readings in W or kW describe the current rate, while these energy readings are in kWh.
+**Solar production is the inverter's lifetime production counter.** Home Assistant uses changes in a cumulative sensor, not a sum of every displayed reading. If a counter starts at 0 and later reads 1, 4, and 5 kWh, the day's gain is **5 kWh**, not 10 kWh. If Home Assistant first observes it at 1 kWh, that first reading is its baseline and it records the later **4 kWh** gain. A lifetime counter works the same way: an example initial 10,000 kWh is a starting point, not 10,000 kWh of new production. Do not add both **Daily Energy** and **Solar production** as solar production sources for the same inverter; that would count one production stream twice. Power readings in W or kW describe the current rate, while these energy readings are in kWh.
 
 If one of these sensors is missing from a selector, open **Settings → Developer Tools → States** and find its actual entity ID. Check that it has a numeric state, `device_class: energy`, `state_class: total_increasing`, and `unit_of_measurement: kWh`. These are set by the integration for the cloud total sensors. Then check **Settings → Developer Tools → Statistics** for errors affecting that entity, and confirm the Recorder integration is recording it. Home Assistant's [Energy FAQ](https://www.home-assistant.io/docs/energy/faq/) explains the selector requirements, and its [long-term statistics guide](https://www.home-assistant.io/docs/configuration/long-term-statistics/) explains how cumulative changes are counted. If it still does not appear, report the exact Energy field, entity ID, and sanitized attributes; hide serial numbers and account details.
 
@@ -96,7 +96,7 @@ Home Assistant controls the Energy dashboard's suggested choices and saved confi
 
 Choose **one entry per physical inverter** for each Energy flow. Adding cloud
 and direct readings from the same device, or adding both **Daily Energy** and
-**Total Energy** for the same solar production, counts that flow twice. New
+**Solar production** for the same solar production, counts that flow twice. New
 cloud setup attempts for an inverter already configured through another cloud
 account are rejected; older duplicate entries are not removed automatically.
 
@@ -113,7 +113,7 @@ measurement`, and `%`. Energy counters use `device_class: energy` and
 `state_class: total_increasing`. These classes let Home Assistant build
 long-term statistics and offer the cumulative counters in Energy selectors.
 If you disabled a direct LAN entry, remove its old solar source from **Settings
-→ Dashboards → Energy** and choose the active cloud **Total Energy** sensor
+→ Dashboards → Energy** and choose the active cloud **Solar production** sensor
 instead. A saved Energy source pointing to the disabled direct entity will
 remain undefined even when the cloud sensors are healthy.
 

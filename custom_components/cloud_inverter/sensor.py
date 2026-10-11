@@ -115,7 +115,7 @@ async def async_setup_entry(
     # Production Sensors
     sensors.extend([
         CloudInverterSensor(coordinator, "EToday", "Daily Energy", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
-        CloudInverterSensor(coordinator, "ETotal", "Total Energy", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
+        CloudInverterSensor(coordinator, "ETotal", "Solar production", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
         CloudInverterSensor(coordinator, "Peackpower", "Peak Power Today", UnitOfPower.WATT, SensorDeviceClass.POWER, SensorStateClass.MEASUREMENT),
     ])
     
@@ -129,8 +129,8 @@ async def async_setup_entry(
         CloudInverterSensor(coordinator, "grid_export_power", "Instantaneous Power Export", UnitOfPower.WATT, SensorDeviceClass.POWER, SensorStateClass.MEASUREMENT),
         CloudInverterSensor(coordinator, "ETDay", "Grid Export Today", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
         CloudInverterSensor(coordinator, "EFDay", "Grid Import Today", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
-        CloudInverterSensor(coordinator, "ETTotal", "Grid Export Total", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
-        CloudInverterSensor(coordinator, "EFTotal", "Grid Import Total", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
+        CloudInverterSensor(coordinator, "ETTotal", "Grid export", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
+        CloudInverterSensor(coordinator, "EFTotal", "Grid import", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
     ])
     
     # Battery Sensors
@@ -144,8 +144,8 @@ async def async_setup_entry(
         CloudInverterSensor(coordinator, "fromPbat", "Instantaneous Battery Discharging Power", UnitOfPower.WATT, SensorDeviceClass.POWER, SensorStateClass.MEASUREMENT),
         CloudInverterSensor(coordinator, "batChrg", "Battery Charge Today", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
         CloudInverterSensor(coordinator, "batDischrg", "Battery Discharge Today", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
-        CloudInverterSensor(coordinator, "Etotal_batChrg", "Battery Charge Total", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
-        CloudInverterSensor(coordinator, "Etotal_batDischrg", "Battery Discharge Total", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
+        CloudInverterSensor(coordinator, "Etotal_batChrg", "Battery charge", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
+        CloudInverterSensor(coordinator, "Etotal_batDischrg", "Battery discharge", UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING),
         CloudInverterSensor(coordinator, "brand", "Battery Type", None, None, None),
         CloudInverterSensor(coordinator, "capacity", "Battery Capacity", "Ah", None, SensorStateClass.MEASUREMENT),
     ])
@@ -302,6 +302,8 @@ class CloudInverterDataUpdateCoordinator(DataUpdateCoordinator):
 class CloudInverterSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Solar Touch sensor."""
 
+    _attr_has_entity_name = True
+
     def __init__(
         self,
         coordinator: CloudInverterDataUpdateCoordinator,
@@ -315,7 +317,7 @@ class CloudInverterSensor(CoordinatorEntity, SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._data_key = data_key
-        self._attr_name = f"Solar Touch {name}"
+        self._attr_name = name
         self._attr_unique_id = cloud_sensor_unique_id(coordinator.entry_id, data_key)
         self._attr_native_unit_of_measurement = unit
         self._attr_device_class = device_class
@@ -352,7 +354,7 @@ class CloudInverterSensor(CoordinatorEntity, SensorEntity):
         """Return device information about this entity."""
         return {
             "identifiers": {(DOMAIN, self.coordinator.goods_id or self.coordinator.data.get("GoodsID") or self.coordinator.entry_id)},
-            "name": f"Solar Touch {self.coordinator.data.get('modelName', 'Unknown')}",
+            "name": "Solar Touch",
             "manufacturer": "SolarMax",
             "model": self.coordinator.data.get("modelName", "Unknown"),
             "sw_version": self.coordinator.data.get("FirmwareVersion", "Unknown"),
