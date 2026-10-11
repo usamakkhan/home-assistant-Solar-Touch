@@ -66,8 +66,8 @@ If the integration rejects credentials that work on the website, verify account 
 
 ### Configure the Energy dashboard
 
-Each configured inverter has a short default device name, such as **Solar Touch
-1** or **Solar Touch 2**, across both connection methods. Home Assistant uses
+Each configured inverter has a short default device name, such as **ST 1**
+or **ST 2**, across both connection methods. Home Assistant uses
 this name with the Energy sensor name in graph legends. Rename a device in
 **Settings → Devices & services → Devices** if a location-based label would be
 clearer. The default label never contains its IP address or serial number.

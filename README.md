@@ -21,7 +21,7 @@ existing entity ID may still start with `sensor.cloud_inverter_` after the
 display name changes to Solar Touch.
 
 When I configure more than one inverter, each cloud or LAN device receives a
-short, stable label such as **Solar Touch 1** or **Solar Touch 2**. The number
+short, stable label such as **ST 1** or **ST 2** (**ST** means Solar Touch). The number
 distinguishes their Energy graph legends without displaying an IP address or
 serial number. It stays with the entry after a restart. I can give a device a
 more meaningful name in **Settings → Devices & services → Devices → Solar Touch

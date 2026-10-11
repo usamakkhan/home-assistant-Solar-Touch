@@ -208,7 +208,7 @@ class SolarMaxSensor(CoordinatorEntity[DirectSolarMaxCoordinator], SensorEntity)
         )
         return DeviceInfo(
             identifiers={(DOMAIN, identity)},
-            name=self.entry.data.get(CONF_DEVICE_LABEL, "Solar Touch 1"),
+            name=self.entry.data.get(CONF_DEVICE_LABEL, "ST 1"),
             manufacturer="SolarMax / Senergy",
             model=model,
         )

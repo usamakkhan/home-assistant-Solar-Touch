@@ -82,7 +82,7 @@ async def async_setup_entry(
     # Create coordinator
     coordinator = CloudInverterDataUpdateCoordinator(
         hass, api, int(entry.options.get(CONF_SCAN_INTERVAL, UPDATE_INTERVAL)), entry.entry_id,
-        goods_id, entry.data.get(CONF_DEVICE_LABEL, "Solar Touch 1"),
+        goods_id, entry.data.get(CONF_DEVICE_LABEL, "ST 1"),
     )
     try:
         await coordinator.async_config_entry_first_refresh()

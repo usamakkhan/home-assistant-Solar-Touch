@@ -22,6 +22,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Persist a short device name once so additional inverters cannot renumber it.
     label = device_labels(hass.config_entries.async_entries(DOMAIN))[entry.entry_id]
     title = entry.title
+    old_label = entry.data.get(CONF_DEVICE_LABEL)
+    default_suffix = "LAN" if entry.data.get(CONF_SOURCE) == SOURCE_DIRECT else entry.data.get("model", "Unknown")
+    if old_label and title == f"{old_label} ({default_suffix})":
+        title = f"{label} ({default_suffix})"
     if title in ("Cloud Inverter Direct", "Solar Touch Direct"):
         title = f"{label} (LAN)"
     elif title in {
