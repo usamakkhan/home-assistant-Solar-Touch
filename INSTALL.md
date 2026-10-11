@@ -66,6 +66,12 @@ If the integration rejects credentials that work on the website, verify account 
 
 ### Configure the Energy dashboard
 
+Each configured inverter has a short default device name, such as **Solar Touch
+1** or **Solar Touch 2**, across both connection methods. Home Assistant uses
+this name with the Energy sensor name in graph legends. Rename a device in
+**Settings → Devices & services → Devices** if a location-based label would be
+clearer. The default label never contains its IP address or serial number.
+
 In **Settings → Dashboards → Energy**, assign **Solar production** to solar production, **Grid import** to grid energy imported, and **Grid export** to grid energy exported. For a supported home battery, use **Battery charge** for energy going into the battery and **Battery discharge** for energy coming out. Both cloud and direct LAN sources now use these short display names. These are cumulative kWh counters; Home Assistant measures their increases. A lifetime reading is the starting point for future increases, not energy consumed or produced on the day you add it. Select each production stream once; do not add both the daily counter and **Solar production** for the same inverter. Older versions used longer names for these five counters.
 
 If a sensor is absent from the Energy selector, find it in **Settings → Developer Tools → States** and check for a numeric state, `device_class: energy`, `state_class: total_increasing`, and `unit_of_measurement: kWh`. Then inspect **Settings → Developer Tools → Statistics** for an error on that entity and confirm Recorder has not excluded it. See the [Home Assistant Energy FAQ](https://www.home-assistant.io/docs/energy/faq/) and the [README Energy guide](README.md#-add-solar-touch-sensors-to-the-energy-dashboard).

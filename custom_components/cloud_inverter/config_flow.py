@@ -16,6 +16,7 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import CloudInverterAPI
 from .direct_config import direct_unique_id, parse_direct_settings, probe_direct_inverter
+from .device_naming import next_device_label
 from .const import (
     DOMAIN,
     CONF_USERNAME,
@@ -28,6 +29,7 @@ from .const import (
     CONF_PORT,
     CONF_UNIT_ID,
     CONF_SCAN_INTERVAL,
+    CONF_DEVICE_LABEL,
     DEFAULT_DIRECT_PORT,
     DEFAULT_DIRECT_UNIT_ID,
     DEFAULT_DIRECT_SCAN_INTERVAL,
@@ -167,9 +169,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if self._direct_data is None:
             return await self.async_step_direct()
         if user_input is not None:
+            label = next_device_label(self._async_current_entries())
             return self.async_create_entry(
-                title="Solar Touch Direct",
-                data=self._direct_data,
+                title=f"{label} (LAN)",
+                data={**self._direct_data, CONF_DEVICE_LABEL: label},
             )
         return self.async_show_form(
             step_id="direct_confirm",
@@ -318,7 +321,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 await self.api.close()
                 self.api = None
         
-        title = f"Solar Touch ({selected_inverter['model']})"
+        label = next_device_label(self._async_current_entries())
+        title = f"{label} ({selected_inverter['model']})"
         
         return self.async_create_entry(
             title=title,
@@ -328,6 +332,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 CONF_PASSWORD: self.password,
                 "goods_id": goods_id,
                 "model": selected_inverter["model"],
+                CONF_DEVICE_LABEL: label,
             }
         )
 

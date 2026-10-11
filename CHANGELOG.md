@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.14 — Solar Touch — 2026-10-11
+
+- Give each cloud or direct LAN inverter a short, stable default device name: **Solar Touch 1**, **Solar Touch 2**, and so on. The number is stored with its configuration entry, so later additions or restarts cannot renumber existing devices.
+- Migrate older default entry titles to include that number while preserving user-customized titles and Home Assistant device-name overrides. No LAN IP, account name, or serial is included in the label.
+- Keep all sensor unique IDs, entity IDs, measurements, and Energy statistics unchanged. The direct LAN and cloud Energy counters retain their short names from v1.5.13.
+
 ## v1.5.13 — Solar Touch — 2026-10-11
 
 - Gave the direct LAN lifetime Energy counters the same short names as the cloud counters. The Energy graph can distinguish solar production, grid import/export, and battery charge/discharge before the legend truncates; existing entity IDs and statistics remain unchanged.

@@ -20,6 +20,13 @@ compatibility. Existing entity IDs and dashboard references are preserved; an
 existing entity ID may still start with `sensor.cloud_inverter_` after the
 display name changes to Solar Touch.
 
+When I configure more than one inverter, each cloud or LAN device receives a
+short, stable label such as **Solar Touch 1** or **Solar Touch 2**. The number
+distinguishes their Energy graph legends without displaying an IP address or
+serial number. It stays with the entry after a restart. I can give a device a
+more meaningful name in **Settings → Devices & services → Devices → Solar Touch
+device → Edit**; Home Assistant keeps that custom name instead of the default.
+
 > [!NOTE]
 > **License:** [GNU Affero General Public License v3.0](https://github.com/usamakkhan/home-assistant-Solar-Touch/blob/main/LICENSE) (`AGPL-3.0-only`). Copyright © 2026 Usama Khan. The license permits use, modification, redistribution, and sale under its conditions, including source availability and preservation of notices.
 

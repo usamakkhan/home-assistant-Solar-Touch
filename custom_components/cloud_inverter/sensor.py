@@ -45,6 +45,7 @@ from .const import (
     CONF_SOURCE,
     SOURCE_DIRECT,
     CONF_SCAN_INTERVAL,
+    CONF_DEVICE_LABEL,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -81,7 +82,7 @@ async def async_setup_entry(
     # Create coordinator
     coordinator = CloudInverterDataUpdateCoordinator(
         hass, api, int(entry.options.get(CONF_SCAN_INTERVAL, UPDATE_INTERVAL)), entry.entry_id,
-        goods_id,
+        goods_id, entry.data.get(CONF_DEVICE_LABEL, "Solar Touch 1"),
     )
     try:
         await coordinator.async_config_entry_first_refresh()
@@ -204,7 +205,7 @@ async def async_setup_entry(
 class CloudInverterDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching Solar Touch data."""
 
-    def __init__(self, hass: HomeAssistant, api: CloudInverterAPI, interval_seconds: int, entry_id: str, goods_id: str | None) -> None:
+    def __init__(self, hass: HomeAssistant, api: CloudInverterAPI, interval_seconds: int, entry_id: str, goods_id: str | None, device_label: str) -> None:
         """Initialize coordinator."""
         super().__init__(
             hass,
@@ -216,6 +217,7 @@ class CloudInverterDataUpdateCoordinator(DataUpdateCoordinator):
         self.api = api
         self.entry_id = entry_id
         self.goods_id = goods_id
+        self.device_label = device_label
         self.health = TelemetryHealth()
 
     async def _async_update_data(self) -> dict[str, Any]:
@@ -354,7 +356,7 @@ class CloudInverterSensor(CoordinatorEntity, SensorEntity):
         """Return device information about this entity."""
         return {
             "identifiers": {(DOMAIN, self.coordinator.goods_id or self.coordinator.data.get("GoodsID") or self.coordinator.entry_id)},
-            "name": "Solar Touch",
+            "name": self.coordinator.device_label,
             "manufacturer": "SolarMax",
             "model": self.coordinator.data.get("modelName", "Unknown"),
             "sw_version": self.coordinator.data.get("FirmwareVersion", "Unknown"),

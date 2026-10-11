@@ -8,8 +8,9 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryError
 
-from .const import DOMAIN, CONF_GOODS_ID, CONF_SOURCE, SOURCE_CLOUD, SOURCE_DIRECT
+from .const import DOMAIN, CONF_DEVICE_LABEL, CONF_GOODS_ID, CONF_SOURCE, SOURCE_CLOUD, SOURCE_DIRECT
 from .direct_coordinator import DirectSolarMaxCoordinator
+from .device_naming import device_labels
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,13 +19,23 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Solar Touch from a config entry."""
-    # Keep user-customized titles; migrate only titles created by older releases.
-    if entry.title == "Cloud Inverter Direct":
-        hass.config_entries.async_update_entry(entry, title="Solar Touch Direct")
-    elif entry.title.startswith("Cloud Inverter ("):
-        hass.config_entries.async_update_entry(
-            entry, title="Solar Touch (" + entry.title[len("Cloud Inverter ("):]
-        )
+    # Persist a short device name once so additional inverters cannot renumber it.
+    label = device_labels(hass.config_entries.async_entries(DOMAIN))[entry.entry_id]
+    title = entry.title
+    if title in ("Cloud Inverter Direct", "Solar Touch Direct"):
+        title = f"{label} (LAN)"
+    elif title in {
+        f"Cloud Inverter ({entry.data.get('model', 'Unknown')})",
+        f"Solar Touch ({entry.data.get('model', 'Unknown')})",
+    }:
+        title = f"{label} ({entry.data.get('model', 'Unknown')})"
+    updates = {}
+    if entry.data.get(CONF_DEVICE_LABEL) != label:
+        updates["data"] = {**entry.data, CONF_DEVICE_LABEL: label}
+    if title != entry.title:
+        updates["title"] = title
+    if updates:
+        hass.config_entries.async_update_entry(entry, **updates)
     hass.data.setdefault(DOMAIN, {})
     
     # Keep only the selected inverter reference in integration state.

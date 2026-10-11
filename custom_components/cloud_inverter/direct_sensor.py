@@ -29,7 +29,7 @@ from .direct_coordinator import DirectSolarMaxCoordinator
 from .direct_config import direct_unique_id
 from .numeric import combine_total_energy, split_direct_battery_power, split_grid_power
 from .const import (
-    CONF_HOST, CONF_PORT, CONF_UNIT_ID, DEFAULT_DIRECT_UNIT_ID,
+    CONF_DEVICE_LABEL, CONF_HOST, CONF_PORT, CONF_UNIT_ID, DEFAULT_DIRECT_UNIT_ID,
 )
 
 
@@ -208,7 +208,7 @@ class SolarMaxSensor(CoordinatorEntity[DirectSolarMaxCoordinator], SensorEntity)
         )
         return DeviceInfo(
             identifiers={(DOMAIN, identity)},
-            name="Solar Touch Direct",
+            name=self.entry.data.get(CONF_DEVICE_LABEL, "Solar Touch 1"),
             manufacturer="SolarMax / Senergy",
             model=model,
         )
